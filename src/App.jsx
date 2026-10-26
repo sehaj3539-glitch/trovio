@@ -15,6 +15,7 @@ import ReportLost from './pages/ReportLost';
 import ReportFound from './pages/ReportFound';
 import ItemDetails from './pages/ItemDetails';
 import SignIn from './pages/SignIn';
+import SignUp from './pages/SignUp';
 import About from './pages/About';
 import MyReports from './pages/MyReports';
 
@@ -72,6 +73,8 @@ export default function App() {
             <Route path="/report-found" element={<ReportFound />} />
             <Route path="/items/:id" element={<ItemDetails />} />
             <Route path="/signin" element={<SignIn />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/login" element={<SignIn />} />
             <Route path="/about" element={<About />} />
             <Route path="/my-reports" element={<MyReports />} />
             <Route path="*" element={<NotFound />} />

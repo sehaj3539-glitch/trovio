@@ -1,43 +1,108 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { 
   Search, 
   AlertCircle, 
   PlusCircle, 
   Sparkles, 
-  CheckCircle2 
+  CheckCircle2,
+  RotateCcw
 } from 'lucide-react';
 import { useItems } from '../context/ItemContext';
+import { useAuth } from '../context/AuthContext';
 import ItemCard from '../components/common/ItemCard';
 import Stats from '../components/common/Stats';
+import AuthModal from '../components/common/AuthModal';
 
 /**
  * Landing Page Component
  * Serves as the primary public storefront for the Trovio Campus network.
- * Displays separate sections for Lost Items, Found Items, and Recently Resolved Items.
+ * Enforces authentication gates for reporting and searching per requirements.
+ * Integrates with mock REST API (/api/items).
  */
 export default function Landing() {
-  const { items } = useItems();
+  const { items, loading, error, fetchItems } = useItems();
+  const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
 
-  // Handle hero quick search submit
+  // Auth gate modal state
+  const [authModal, setAuthModal] = useState({
+    isOpen: false,
+    title: 'Sign in required!',
+    message: '',
+    redirectPath: '/'
+  });
+
+  const closeAuthModal = () => {
+    setAuthModal(prev => ({ ...prev, isOpen: false }));
+  };
+
+  // Handle hero search submit with auth check
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      navigate(`/directory?search=${encodeURIComponent(searchQuery.trim())}`);
-    } else {
-      navigate('/directory');
+    const query = searchQuery.trim();
+    const targetUrl = query ? `/directory?search=${encodeURIComponent(query)}` : '/directory';
+
+    if (!user) {
+      setAuthModal({
+        isOpen: true,
+        title: 'Sign in required!',
+        message: 'Please sign in or create an account to search for lost and found items.',
+        redirectPath: targetUrl
+      });
+      return;
     }
+
+    navigate(targetUrl);
+  };
+
+  // Handle Report Lost click with auth check
+  const handleReportLostClick = (e) => {
+    e.preventDefault();
+    if (!user) {
+      setAuthModal({
+        isOpen: true,
+        title: 'Sign in required!',
+        message: 'Please sign in or create an account before reporting a lost or found item.',
+        redirectPath: '/report-lost'
+      });
+      return;
+    }
+    navigate('/report-lost');
+  };
+
+  // Handle Report Found click with auth check
+  const handleReportFoundClick = (e) => {
+    e.preventDefault();
+    if (!user) {
+      setAuthModal({
+        isOpen: true,
+        title: 'Sign in required!',
+        message: 'Please sign in or create an account before reporting a lost or found item.',
+        redirectPath: '/report-found'
+      });
+      return;
+    }
+    navigate('/report-found');
   };
 
   // Separate items into 3 distinct categories for the Home page
-  const lostItems = items.filter(i => i.type === 'lost' && i.status !== 'resolved').slice(0, 4);
-  const foundItems = items.filter(i => i.type === 'found' && i.status !== 'resolved').slice(0, 4);
-  const resolvedItems = items.filter(i => i.status === 'resolved').slice(0, 4);
+  const lostItems = items.filter(i => (i.type === 'lost' || i.status === 'Lost') && i.status !== 'resolved' && i.itemStatus !== 'resolved').slice(0, 4);
+  const foundItems = items.filter(i => (i.type === 'found' || i.status === 'Found') && i.status !== 'resolved' && i.itemStatus !== 'resolved').slice(0, 4);
+  const resolvedItems = items.filter(i => i.status === 'resolved' || i.itemStatus === 'resolved').slice(0, 4);
 
   return (
     <main className="landing-page">
+      {/* Reusable Authentication Modal */}
+      <AuthModal
+        isOpen={authModal.isOpen}
+        onClose={closeAuthModal}
+        title={authModal.title}
+        message={authModal.message}
+        redirectPath={authModal.redirectPath}
+      />
+
       {/* Hero Section */}
       <section className="hero-section">
         <div className="app-container">
@@ -57,7 +122,7 @@ export default function Landing() {
               Search reported items, post what you've found, or report your missing belongings.
             </p>
 
-            {/* Quick Search Bar */}
+            {/* Quick Search Bar (Requires Auth on Submit) */}
             <form onSubmit={handleSearchSubmit} className="hero-search-form" role="search">
               <div className="hero-search-input-wrap">
                 <Search className="hero-search-icon" size={20} />
@@ -75,23 +140,33 @@ export default function Landing() {
               </button>
             </form>
 
-            {/* Main Action CTAs */}
+            {/* Main Action CTAs (Require Auth on Click) */}
             <div className="hero-action-buttons">
-              <Link to="/report-lost" className="btn-cta btn-lost">
+              <button 
+                type="button"
+                onClick={handleReportLostClick} 
+                className="btn-cta btn-lost"
+                style={{ textAlign: 'left', border: 'none', cursor: 'pointer' }}
+              >
                 <AlertCircle size={20} />
                 <div className="btn-cta-text">
                   <span className="btn-cta-title">Report Lost</span>
                   <span className="btn-cta-sub">File a missing item report</span>
                 </div>
-              </Link>
+              </button>
 
-              <Link to="/report-found" className="btn-cta btn-found">
+              <button 
+                type="button"
+                onClick={handleReportFoundClick} 
+                className="btn-cta btn-found"
+                style={{ textAlign: 'left', border: 'none', cursor: 'pointer' }}
+              >
                 <PlusCircle size={20} />
                 <div className="btn-cta-text">
                   <span className="btn-cta-title">Report Found</span>
                   <span className="btn-cta-sub">Help reunite an item</span>
                 </div>
-              </Link>
+              </button>
             </div>
           </div>
         </div>
@@ -103,6 +178,30 @@ export default function Landing() {
           <Stats />
         </div>
       </section>
+
+      {/* REST API Status Display: Loading & Error States */}
+      {loading && (
+        <section className="app-container">
+          <div className="api-loading-state">
+            <div className="api-spinner"></div>
+            <p className="api-loading-text">Loading campus items from REST API...</p>
+          </div>
+        </section>
+      )}
+
+      {error && (
+        <section className="app-container">
+          <div className="api-error-card">
+            <AlertCircle size={32} color="#e11d48" />
+            <h3 className="api-error-title">Unable to Connect to REST API</h3>
+            <p className="api-error-desc">{error}</p>
+            <button type="button" onClick={fetchItems} className="api-retry-btn">
+              <RotateCcw size={16} />
+              <span>Retry Fetch</span>
+            </button>
+          </div>
+        </section>
+      )}
 
       {/* 1. Lost Items Section */}
       <section className="home-category-section lost-items-section">

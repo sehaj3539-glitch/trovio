@@ -1,0 +1,251 @@
+{
+  "items": [
+    {
+      "id": "item_1793040826147",
+      "itemName": "macbook",
+      "title": "macbook",
+      "description": "....",
+      "category": "General",
+      "location": "Campus Grounds",
+      "date": "2026-09-30",
+      "status": "Lost",
+      "type": "lost",
+      "itemStatus": "active",
+      "image": "",
+      "reportedBy": "kayna",
+      "ownerId": "user_1793040782894",
+      "contact": {
+        "name": "kayna",
+        "email": "kayna@gmail.com",
+        "phone": "7404369555",
+        "preferredMethod": "Phone / WhatsApp"
+      },
+      "createdAt": "2026-10-26T18:53:46.174Z"
+    },
+    {
+      "id": "item_101",
+      "itemName": "Lost HP Pavilion 14-inch Laptop",
+      "title": "Lost HP Pavilion 14-inch Laptop",
+      "description": "Silver HP Pavilion laptop inside a black Targus sleeve. Has a GitHub Octocat sticker and a small scratch near the charging port.",
+      "category": "Electronics",
+      "location": "Central Library, 2nd Floor Study Room",
+      "date": "2026-08-30",
+      "status": "Lost",
+      "type": "lost",
+      "itemStatus": "active",
+      "image": "",
+      "reportedBy": "Aarav Sharma",
+      "ownerId": "user_aarav_01",
+      "contact": {
+        "name": "Aarav Sharma",
+        "email": "aarav.sharma@campus.edu.in",
+        "phone": "+91 98765 43210",
+        "preferredMethod": "Phone / WhatsApp"
+      },
+      "createdAt": "2026-08-30T14:20:00Z"
+    },
+    {
+      "id": "item_102",
+      "itemName": "Found Casio Scientific Calculator fx-991EX",
+      "title": "Found Casio Scientific Calculator fx-991EX",
+      "description": "Black Casio scientific calculator with sliding hard cover. Left on table 4 after the second shift exam.",
+      "category": "Electronics",
+      "location": "Science Block, Lab 2",
+      "date": "2026-09-01",
+      "status": "Found",
+      "type": "found",
+      "itemStatus": "active",
+      "image": "",
+      "reportedBy": "Ananya Iyer",
+      "ownerId": "user_ananya_02",
+      "contact": {
+        "name": "Ananya Iyer",
+        "email": "ananya.iyer@campus.edu.in",
+        "phone": "+91 98201 12345",
+        "preferredMethod": "Email"
+      },
+      "createdAt": "2026-09-01T10:15:00Z"
+    },
+    {
+      "id": "item_103",
+      "itemName": "Found Student Campus ID Card",
+      "title": "Found Student Campus ID Card",
+      "description": "University Student ID Card inside a transparent navy blue lanyard with college crest.",
+      "category": "ID & Documents",
+      "location": "Main Cafeteria, Counter 3",
+      "date": "2026-09-02",
+      "status": "Found",
+      "type": "found",
+      "itemStatus": "active",
+      "image": "",
+      "reportedBy": "Security Desk",
+      "ownerId": "user_aarav_01",
+      "contact": {
+        "name": "Campus Security Office",
+        "email": "security@campus.edu.in",
+        "phone": "+91 98765 00001",
+        "preferredMethod": "In-person / Security Desk"
+      },
+      "createdAt": "2026-09-02T12:30:00Z"
+    },
+    {
+      "id": "item_104",
+      "itemName": "Lost Milton Thermosteel Water Bottle",
+      "title": "Lost Milton Thermosteel Water Bottle",
+      "description": "Insulated stainless steel water bottle with flip lid. Has a small ISRO mission sticker on the lower side.",
+      "category": "Personal Items",
+      "location": "Main Campus Canteen Area",
+      "date": "2026-09-02",
+      "status": "Lost",
+      "type": "lost",
+      "itemStatus": "active",
+      "image": "",
+      "reportedBy": "Rohan Patel",
+      "ownerId": "user_rohan_03",
+      "contact": {
+        "name": "Rohan Patel",
+        "email": "rohan.patel@campus.edu.in",
+        "phone": "+91 98450 67890",
+        "preferredMethod": "Phone / WhatsApp"
+      },
+      "createdAt": "2026-09-02T18:00:00Z"
+    },
+    {
+      "id": "item_105",
+      "itemName": "Lost Engineering Mathematics Textbook",
+      "title": "Lost Engineering Mathematics Textbook",
+      "description": "Paperback 44th Edition textbook with yellow sticky bookmark tabs on Laplace Transforms and Differential Equations.",
+      "category": "Books & Study",
+      "location": "Lecture Hall Complex (LH-1)",
+      "date": "2026-09-01",
+      "status": "Lost",
+      "type": "lost",
+      "itemStatus": "active",
+      "image": "",
+      "reportedBy": "Sneha Rao",
+      "ownerId": "user_sneha_04",
+      "contact": {
+        "name": "Sneha Rao",
+        "email": "sneha.rao@campus.edu.in",
+        "phone": "+91 97123 45678",
+        "preferredMethod": "Email"
+      },
+      "createdAt": "2026-09-01T16:50:00Z"
+    },
+    {
+      "id": "item_106",
+      "itemName": "Lost Noise-Cancelling Earphones",
+      "title": "Lost Noise-Cancelling Earphones",
+      "description": "Matte black wireless earbuds in compact charging capsule. Left earbud has tiny silver initials dot on bottom.",
+      "category": "Electronics",
+      "location": "Computer Science Lab 3, Tech Block",
+      "date": "2026-09-03",
+      "status": "Lost",
+      "type": "lost",
+      "itemStatus": "active",
+      "image": "",
+      "reportedBy": "Kabir Verma",
+      "ownerId": "user_kabir_05",
+      "contact": {
+        "name": "Kabir Verma",
+        "email": "kabir.verma@campus.edu.in",
+        "phone": "+91 99001 23456",
+        "preferredMethod": "Phone / WhatsApp"
+      },
+      "createdAt": "2026-09-03T11:20:00Z"
+    },
+    {
+      "id": "item_107",
+      "itemName": "Found Chemistry Lab Coat & Goggles",
+      "title": "Found Chemistry Lab Coat & Goggles",
+      "description": "White size-M cotton lab coat with protective transparent safety goggles in the right front pocket.",
+      "category": "Lab & Academic",
+      "location": "Chemistry Department, Ground Floor",
+      "date": "2026-09-03",
+      "status": "Found",
+      "type": "found",
+      "itemStatus": "active",
+      "image": "",
+      "reportedBy": "Pooja Nair",
+      "ownerId": "user_pooja_06",
+      "contact": {
+        "name": "Pooja Nair",
+        "email": "pooja.nair@campus.edu.in",
+        "phone": "+91 98212 34567",
+        "preferredMethod": "Email"
+      },
+      "createdAt": "2026-09-03T15:45:00Z"
+    },
+    {
+      "id": "item_108",
+      "itemName": "Found Set of Bike & Locker Keys",
+      "title": "Found Set of Bike & Locker Keys",
+      "description": "Brass bike key and small Godrej locker key on a blue woven paracord keychain with a metal carabiner.",
+      "category": "Keys & Access",
+      "location": "Student Parking Lot Gate 2",
+      "date": "2026-09-04",
+      "status": "Found",
+      "type": "found",
+      "itemStatus": "active",
+      "image": "",
+      "reportedBy": "Security Gate 2",
+      "ownerId": "user_ananya_02",
+      "contact": {
+        "name": "Campus Security Office",
+        "email": "security@campus.edu.in",
+        "phone": "+91 98765 00002",
+        "preferredMethod": "Security Desk"
+      },
+      "createdAt": "2026-09-04T09:10:00Z"
+    },
+    {
+      "id": "item_109",
+      "itemName": "Lost Dell 65W Type-C Laptop Charger",
+      "title": "Lost Dell 65W Type-C Laptop Charger",
+      "description": "Original Dell 65W USB-C AC power adapter with black three-pin Indian plug and velcro cable tie.",
+      "category": "Electronics",
+      "location": "Seminar Hall B, Admin Building",
+      "date": "2026-08-28",
+      "status": "Lost",
+      "type": "lost",
+      "itemStatus": "resolved",
+      "resolutionNote": "Recovered from AV Control Room by student",
+      "resolvedDate": "2026-08-29",
+      "image": "",
+      "reportedBy": "Aarav Sharma",
+      "ownerId": "user_aarav_01",
+      "contact": {
+        "name": "Aarav Sharma",
+        "email": "aarav.sharma@campus.edu.in",
+        "phone": "+91 98765 43210",
+        "preferredMethod": "Phone / WhatsApp"
+      },
+      "createdAt": "2026-08-28T16:00:00Z"
+    },
+    {
+      "id": "item_110",
+      "itemName": "Found Blue Foldable Umbrella",
+      "title": "Found Blue Foldable Umbrella",
+      "description": "Navy blue automatic compact umbrella with wooden finish curved handle.",
+      "category": "Personal Items",
+      "location": "Main Auditorium Entrance",
+      "date": "2026-08-27",
+      "status": "Found",
+      "type": "found",
+      "itemStatus": "resolved",
+      "resolutionNote": "Claimed successfully by owner",
+      "resolvedDate": "2026-08-28",
+      "claimed": true,
+      "image": "",
+      "reportedBy": "Ananya Iyer",
+      "ownerId": "user_ananya_02",
+      "contact": {
+        "name": "Ananya Iyer",
+        "email": "ananya.iyer@campus.edu.in",
+        "phone": "+91 98201 12345",
+        "preferredMethod": "Email"
+      },
+      "createdAt": "2026-08-27T17:30:00Z"
+    }
+  ]
+}

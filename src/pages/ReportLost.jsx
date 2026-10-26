@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { 
   AlertCircle, 
   User, 
-  Sparkles
+  Sparkles,
+  Lock,
+  LogIn,
+  UserPlus,
+  ArrowLeft
 } from 'lucide-react';
 import { useItems } from '../context/ItemContext';
 import { useAuth } from '../context/AuthContext';
+import AuthModal from '../components/common/AuthModal';
 
 /**
  * Validate and convert DD/MM/YYYY to ISO YYYY-MM-DD
@@ -51,13 +56,16 @@ const parseAndValidateDate = (dateStr, fieldLabel = 'Date lost') => {
 };
 
 /**
- * ReportLost Component (Simple, Category-free & Location-free)
- * Clean, fast form to submit missing belongings.
+ * ReportLost Component
+ * Enforces route-level authentication: logged-out users cannot access or submit the form.
+ * Displays "Sign in required!" modal and preserves intended destination.
  */
 export default function ReportLost() {
   const { addItem } = useItems();
   const { user } = useAuth();
   const navigate = useNavigate();
+
+  const [showAuthModal, setShowAuthModal] = useState(true);
 
   // Simple Form State
   const [formData, setFormData] = useState({
@@ -72,6 +80,82 @@ export default function ReportLost() {
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Route-level protection: If not logged in, prevent access to reporting form
+  if (!user) {
+    return (
+      <main className="form-page" style={{ padding: '4rem 1rem' }}>
+        <AuthModal
+          isOpen={showAuthModal}
+          onClose={() => setShowAuthModal(false)}
+          title="Sign in required!"
+          message="Please sign in or create an account before reporting a lost or found item."
+          redirectPath="/report-lost"
+        />
+
+        <div className="app-container" style={{ maxWidth: '580px', margin: '0 auto' }}>
+          <div className="auth-gate-card" style={{
+            background: 'var(--bg-surface)',
+            border: '1px solid var(--border-color)',
+            borderRadius: 'var(--radius-xl)',
+            padding: '3rem 2rem',
+            textAlign: 'center',
+            boxShadow: 'var(--shadow-md)'
+          }}>
+            <div className="auth-gate-icon" style={{
+              width: '64px',
+              height: '64px',
+              borderRadius: '50%',
+              background: 'rgba(239, 68, 68, 0.12)',
+              color: 'var(--color-danger, #ef4444)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '0 auto 1.5rem'
+            }}>
+              <Lock size={32} />
+            </div>
+
+            <h1 className="auth-gate-title" style={{ fontSize: '1.75rem', fontWeight: 800, marginBottom: '0.75rem' }}>
+              Sign in required!
+            </h1>
+            <p className="auth-gate-desc" style={{ color: 'var(--text-secondary)', fontSize: '1.05rem', lineHeight: 1.6, marginBottom: '2rem' }}>
+              Please sign in or create an account before reporting a lost or found item.
+            </p>
+
+            <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <Link 
+                to="/signin" 
+                state={{ from: '/report-lost' }} 
+                className="btn-primary"
+                style={{ padding: '0.75rem 1.5rem', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
+              >
+                <LogIn size={18} />
+                <span>Sign In</span>
+              </Link>
+
+              <Link 
+                to="/signup" 
+                state={{ from: '/report-lost' }} 
+                className="btn-secondary"
+                style={{ padding: '0.75rem 1.5rem', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
+              >
+                <UserPlus size={18} />
+                <span>Sign Up</span>
+              </Link>
+            </div>
+
+            <div style={{ marginTop: '2rem', borderTop: '1px solid var(--border-color)', paddingTop: '1.5rem' }}>
+              <Link to="/" style={{ color: 'var(--text-muted)', fontSize: '0.9rem', display: 'inline-flex', alignItems: 'center', gap: '0.4rem', textDecoration: 'none' }}>
+                <ArrowLeft size={15} />
+                <span>Return to Campus Home</span>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -98,7 +182,7 @@ export default function ReportLost() {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
@@ -111,25 +195,32 @@ export default function ReportLost() {
 
     setIsSubmitting(true);
 
-    const newItem = addItem({
-      title: formData.title.trim(),
-      type: 'lost',
-      description: formData.description.trim(),
-      date: dateResult.isoDate || formData.date,
-      ownerId: user ? user.id : `guest_${Date.now()}`,
-      contact: {
-        name: formData.name.trim(),
-        email: formData.email.trim(),
-        phone: formData.phone.trim() || 'N/A',
-        preferredMethod: formData.preferredMethod
-      }
-    });
-
-    setTimeout(() => {
-      navigate(`/items/${newItem.id}`, { 
-        state: { message: 'Lost item report submitted successfully!' } 
+    try {
+      const newItem = await addItem({
+        title: formData.title.trim(),
+        itemName: formData.title.trim(),
+        type: 'lost',
+        status: 'Lost',
+        description: formData.description.trim(),
+        date: dateResult.isoDate || formData.date,
+        ownerId: user ? user.id : `guest_${Date.now()}`,
+        reportedBy: formData.name.trim(),
+        image: '',
+        contact: {
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          phone: formData.phone.trim() || 'N/A',
+          preferredMethod: formData.preferredMethod
+        }
       });
-    }, 200);
+
+      navigate(`/items/${newItem.id}`, { 
+        state: { message: 'Lost item report submitted successfully to REST API!' } 
+      });
+    } catch (err) {
+      console.error('Failed to submit lost item report:', err);
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -201,13 +292,13 @@ export default function ReportLost() {
                   <textarea
                     id="description"
                     name="description"
-                    rows={4}
-                    placeholder="Describe color, brand, stickers, unique markings, case, or distinguishing features..."
+                    rows="4"
+                    placeholder="Distinct marks, color, brand, serial number prefix, stickers, where you think you lost it..."
                     value={formData.description}
                     onChange={handleChange}
                     className={`form-textarea ${errors.description ? 'input-error' : ''}`}
                     required
-                  />
+                  ></textarea>
                   {errors.description && <p className="error-text">{errors.description}</p>}
                 </div>
               </fieldset>
@@ -216,7 +307,7 @@ export default function ReportLost() {
               <fieldset className="form-fieldset">
                 <legend className="form-legend">
                   <User size={16} />
-                  <span>Contact Information</span>
+                  <span>Reporter Contact Information</span>
                 </legend>
 
                 <div className="form-grid-2">
@@ -238,7 +329,7 @@ export default function ReportLost() {
 
                   <div className="form-group">
                     <label htmlFor="email" className="form-label required">
-                      Email Address
+                      Campus / Gmail Address
                     </label>
                     <input
                       type="email"
@@ -253,59 +344,78 @@ export default function ReportLost() {
                   </div>
                 </div>
 
-                <div className="form-group">
-                  <label htmlFor="phone" className="form-label">
-                    Phone / WhatsApp (Optional)
-                  </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    placeholder="+91 98765 43210"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className="form-input"
-                  />
+                <div className="form-grid-2">
+                  <div className="form-group">
+                    <label htmlFor="phone" className="form-label">
+                      Phone Number
+                    </label>
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      placeholder="+91 98765 43210"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      className="form-input"
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="preferredMethod" className="form-label">
+                      Preferred Contact Method
+                    </label>
+                    <select
+                      id="preferredMethod"
+                      name="preferredMethod"
+                      value={formData.preferredMethod}
+                      onChange={handleChange}
+                      className="form-select"
+                    >
+                      <option value="Phone / WhatsApp">Phone / WhatsApp</option>
+                      <option value="Email">Email Only</option>
+                      <option value="Campus Security Desk">Via Campus Security Desk</option>
+                    </select>
+                  </div>
                 </div>
               </fieldset>
 
-              {/* Submit Row */}
+              {/* Submit Buttons */}
               <div className="form-submit-row">
-                <button 
-                  type="button" 
-                  onClick={() => navigate(-1)} 
-                  className="btn-cancel"
+                <button
+                  type="button"
+                  onClick={() => navigate(-1)}
+                  className="btn-secondary"
+                  disabled={isSubmitting}
                 >
                   Cancel
                 </button>
-                <button 
-                  type="submit" 
-                  className="btn-submit-lost"
+                <button
+                  type="submit"
+                  className="btn-primary btn-submit-lost"
                   disabled={isSubmitting}
                 >
-                  <AlertCircle size={18} />
-                  <span>{isSubmitting ? 'Publishing Report...' : 'Publish Lost Report'}</span>
+                  {isSubmitting ? 'Submitting to REST API...' : 'Publish Lost Report'}
                 </button>
               </div>
             </form>
           </div>
 
           {/* Tips Sidebar */}
-          <aside className="form-sidebar" aria-label="Tips">
-            <div className="sidebar-card">
-              <h3 className="sidebar-card-title">
-                <Sparkles size={18} />
-                <span>Quick Advice</span>
-              </h3>
-              <ul className="sidebar-tips-list">
+          <aside className="form-tips-sidebar" aria-label="Reporting Tips">
+            <div className="tips-card">
+              <div className="tips-header">
+                <Sparkles size={18} className="tips-icon" />
+                <h2 className="tips-title">Quick Campus Tips</h2>
+              </div>
+              <ul className="tips-list">
                 <li>
-                  <strong>Be Specific:</strong> Mention brand, color, stickers, or unique markings in the description.
+                  <strong>Be Specific:</strong> Mention unique identifiers like stickers, scratches, or custom wallpapers.
                 </li>
                 <li>
-                  <strong>Contact Channels:</strong> Provide an email or phone where you can be reached quickly.
+                  <strong>Check Common Spots:</strong> Did you recheck library lockers, lab tables, or canteen counters?
                 </li>
                 <li>
-                  <strong>Mark Resolved:</strong> Once recovered, you can click <em>"Mark as Resolved"</em> from your dashboard.
+                  <strong>Privacy First:</strong> Never share sensitive PINs or passwords in public descriptions.
                 </li>
               </ul>
             </div>

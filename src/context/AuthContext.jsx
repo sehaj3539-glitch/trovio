@@ -28,31 +28,17 @@ export const AuthProvider = ({ children }) => {
     );
 
     if (found) {
+      if (found.password && found.password !== password) {
+        return { success: false, error: 'Incorrect password. Please try again.' };
+      }
       setUser(found);
       return { success: true };
     }
 
-    // Dynamically initialize user profile for newly authenticated Gmail address
-    const username = trimmedEmail.split('@')[0];
-    const cleanName = username
-      .split(/[._-]/)
-      .map(part => part.charAt(0).toUpperCase() + part.slice(1))
-      .join(' ') || 'Campus User';
-
-    const newUser = {
-      id: `user_${Date.now()}`,
-      name: cleanName,
-      initials: cleanName.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() || 'GU',
-      email: trimmedEmail,
-      password,
-      studentId: `2026STU${Math.floor(1000 + Math.random() * 9000)}`,
-      phone: '+91 98765 43210',
-      department: 'Campus Member'
+    return { 
+      success: false, 
+      error: 'No account found with this Gmail address. Please click Sign Up below to create your account.' 
     };
-
-    saveNewUser(newUser);
-    setUser(newUser);
-    return { success: true };
   };
 
   /**

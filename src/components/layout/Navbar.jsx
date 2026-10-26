@@ -124,9 +124,12 @@ export default function Navbar() {
               </div>
             </div>
           ) : (
-            <div className="auth-buttons-group">
-              <Link to="/signin" className="btn-primary btn-sm">
+            <div className="auth-buttons-group" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+              <Link to="/signin" className="btn-secondary btn-sm">
                 Sign In
+              </Link>
+              <Link to="/signup" className="btn-primary btn-sm">
+                Sign Up
               </Link>
             </div>
           )}
@@ -162,9 +165,12 @@ export default function Navbar() {
               Sign Out ({user.name})
             </button>
           ) : (
-            <div className="mobile-auth-row">
-              <Link to="/signin" className="btn-primary" onClick={closeMenus} style={{ width: '100%', textAlign: 'center' }}>
+            <div className="mobile-auth-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginTop: '0.5rem' }}>
+              <Link to="/signin" className="btn-secondary" onClick={closeMenus} style={{ textAlign: 'center' }}>
                 Sign In
+              </Link>
+              <Link to="/signup" className="btn-primary" onClick={closeMenus} style={{ textAlign: 'center' }}>
+                Sign Up
               </Link>
             </div>
           )}

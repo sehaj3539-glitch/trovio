@@ -36,9 +36,12 @@ export default function MyReports() {
             <p className="auth-gate-desc">
               Please sign in with your campus credentials to view and manage your reported items.
             </p>
-            <div className="auth-gate-actions">
-              <Link to="/signin" className="btn-primary">
+            <div className="auth-gate-actions" style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center' }}>
+              <Link to="/signin" state={{ from: '/my-reports' }} className="btn-primary">
                 Sign In to Account
+              </Link>
+              <Link to="/signup" state={{ from: '/my-reports' }} className="btn-secondary">
+                Create Account (Sign Up)
               </Link>
             </div>
           </div>

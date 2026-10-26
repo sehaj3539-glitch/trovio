@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { LogIn, Mail, Lock } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -149,6 +149,23 @@ export default function SignIn() {
                 <LogIn size={16} />
                 <span>Sign In to Trovio</span>
               </button>
+
+              <div className="auth-footer-prompt" style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '0.92rem', color: 'var(--text-secondary)' }}>
+                Don't have an account yet?{' '}
+                <Link 
+                  to="/signup" 
+                  state={{ from: redirectPath }} 
+                  style={{ color: 'var(--color-primary)', fontWeight: 600, textDecoration: 'none' }}
+                >
+                  Create one now (Sign Up)
+                </Link>
+              </div>
+
+              <div className="demo-credentials-box" style={{ marginTop: '1.5rem', padding: '0.85rem', background: 'var(--bg-subtle)', borderRadius: 'var(--radius-md)', fontSize: '0.82rem', color: 'var(--text-muted)', textAlign: 'left' }}>
+                <strong style={{ display: 'block', marginBottom: '0.3rem', color: 'var(--text-secondary)' }}>Demo College Accounts:</strong>
+                <div>• Email: <code>aarav.sharma@campus.edu.in</code> | Pass: <code>password123</code></div>
+                <div>• Or sign up below with any Gmail address!</div>
+              </div>
             </form>
           </div>
         </div>
